@@ -369,11 +369,22 @@ async function submitOnline(){
     alert("尚未設定線上送出網址。請先在 config.js 設定 SUBMIT_ENDPOINT。");
     return;
   }
-  const name = $("studentName") ? ($("studentName").value.trim() || "未填寫") : "未填寫";
+
+  const name = $("studentName").value.trim() || "未填寫";
+  const timestamp = new Date().toLocaleString("zh-TW");
+
   const payload = new URLSearchParams();
+  payload.append(SUBMIT_FIELDS.timestamp, timestamp);
   payload.append(SUBMIT_FIELDS.name, name);
-  payload.append(SUBMIT_FIELDS.report, reportText());
+  payload.append(SUBMIT_FIELDS.background, $("r1").value);
+  payload.append(SUBMIT_FIELDS.currentStatus, $("r2").value);
+  payload.append(SUBMIT_FIELDS.careerProblem, $("r3").value);
+  payload.append(SUBMIT_FIELDS.cpasTraits, $("r4").value);
+  payload.append(SUBMIT_FIELDS.aptitude, $("r5").value);
+  payload.append(SUBMIT_FIELDS.leadership, $("r6").value);
+  payload.append(SUBMIT_FIELDS.recommendation, $("r7").value);
   payload.append(SUBMIT_FIELDS.evidence, selectedEvidenceText());
+  payload.append(SUBMIT_FIELDS.fullReport, reportText());
 
   $("submitStatus").textContent = "送出中……";
   try{
@@ -383,7 +394,7 @@ async function submitOnline(){
       headers:{"Content-Type":"application/x-www-form-urlencoded"},
       body: payload.toString()
     });
-    $("submitStatus").textContent = "已送出。若使用Google Form或Apps Script，請到接收端確認資料。";
+    $("submitStatus").textContent = "已送出。請到Google Sheet確認是否新增一列。";
   }catch(err){
     $("submitStatus").textContent = "送出失敗，請改用Email或複製報告文字。";
   }

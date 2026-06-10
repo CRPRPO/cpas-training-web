@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CPAS虛擬個案晤談蒐證模擬器 V6</title>
+  <title>CPAS虛擬個案晤談蒐證模擬器 V7</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
   <div>
-    <h1>CPAS虛擬個案晤談蒐證模擬器 V6</h1>
+    <h1>CPAS虛擬個案晤談蒐證模擬器 V7</h1>
     <p>第一階段不顯示CPAS，先練習蒐集背景、現況與行為證據；完成後再揭示CPAS，回頭檢查資料是否能支持報告判斷。</p>
   </div>
   <div class="status">
@@ -106,7 +106,10 @@
         </div>
         <div class="submit-box">
           <h3>把報告傳給老師</h3>
-          <p>V2預設使用Email寄送。若要集中收進Google Sheet，可到 <code>config.js</code> 設定Google Form或Apps Script接收網址。</p>
+          <p>V7可將報告分欄送進Google Sheet。請在 <code>config.js</code> 設定Apps Script接收網址；未設定時仍可用Email或複製文字。</p>
+          <div class="field-hint">
+            <strong>V7送出欄位：</strong>小組姓名、個案背景、現況說明、職涯問題、CPAS人格特質重點、五大適性工作判斷、領導潛能、顧問建議、晤談素材、送出時間。
+          </div>
           <div class="actions">
             <button class="secondary" id="copyReportBtn">複製報告文字</button>
             <button class="secondary" id="downloadReportBtn">下載報告TXT</button>
@@ -329,7 +332,7 @@
 </div>
 
 <footer>
-  <span>教學用途原型 V6｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
+  <span>教學用途原型 V7｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
 </footer>
 
 <script src="config.js"></script>
