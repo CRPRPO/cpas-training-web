@@ -6,7 +6,7 @@ const TEACHER_EMAIL = "tzaancv@gmail.com";
 // 如果你要用 Google Apps Script 收報告，請設定 SUBMIT_ENDPOINT。
 // 預設空白時，系統只會顯示「用Email寄給老師」與「複製報告文字」。
 // 設定後，「線上送出給老師」按鈕會出現。
-const SUBMIT_ENDPOINT = "";
+const SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbzeW5DwXYctCa94xrhHOcExxi1Z3R26h-SexMgwvOJ4xw6kGjqfiCU97Jh5xoJqxto/exec";
 
 // V7 分欄送出欄位名稱。
 // 若使用本資料夾 README_V7.txt 提供的 Apps Script，可保持預設。
