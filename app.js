@@ -38,9 +38,6 @@ function bindEvents(){
   $("resetBtn").onclick = () => {
     if(confirm("確定要重新開始？目前紀錄會清除。")) location.reload();
   };
-  $("copyReportBtn").onclick = copyReport;
-  $("downloadReportBtn").onclick = downloadReport;
-  $("sendEmailBtn").onclick = sendEmail;
   $("submitOnlineBtn").onclick = submitOnline;
   document.querySelectorAll(".tab").forEach(btn=>{
     btn.onclick = () => {
@@ -355,18 +352,11 @@ function downloadReport(){
 }
 
 
-function sendEmail(){
-  const name = $("studentName") ? ($("studentName").value.trim() || "未填寫小組姓名") : "未填寫小組姓名";
-  const subject = encodeURIComponent(`CPAS報告骨架｜${name}`);
-  const body = encodeURIComponent(reportText());
-  const mailto = `mailto:${TEACHER_EMAIL}?subject=${subject}&body=${body}`;
-  window.location.href = mailto;
-  if($("submitStatus")) $("submitStatus").textContent = "已開啟Email程式。若手機沒有設定Email，請改用『複製報告文字』貼到LINE或表單。";
-}
+
 
 async function submitOnline(){
   if(!SUBMIT_ENDPOINT || SUBMIT_ENDPOINT.trim()===""){
-    alert("尚未設定線上送出網址。請先在 config.js 設定 SUBMIT_ENDPOINT。");
+    $("submitStatus").textContent = "尚未設定Google Sheet接收連結，請老師先在 config.js 填入 Apps Script Web App URL。";
     return;
   }
 
@@ -386,7 +376,7 @@ async function submitOnline(){
   payload.append(SUBMIT_FIELDS.evidence, selectedEvidenceText());
   payload.append(SUBMIT_FIELDS.fullReport, reportText());
 
-  $("submitStatus").textContent = "送出中……";
+  $("submitStatus").textContent = "傳送中……";
   try{
     await fetch(SUBMIT_ENDPOINT, {
       method:"POST",
@@ -394,9 +384,9 @@ async function submitOnline(){
       headers:{"Content-Type":"application/x-www-form-urlencoded"},
       body: payload.toString()
     });
-    $("submitStatus").textContent = "已送出。請到Google Sheet確認是否新增一列。";
+    $("submitStatus").textContent = "已送出，請老師到Google Sheet確認資料。";
   }catch(err){
-    $("submitStatus").textContent = "送出失敗，請改用Email或複製報告文字。";
+    $("submitStatus").textContent = "送出失敗，請確認網路與Google Sheet接收設定。";
   }
 }
 
