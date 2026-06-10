@@ -2,7 +2,7 @@
 
 // 請將 Google Apps Script 部署後取得的 Web App URL 貼在這裡。
 // URL 必須以 /exec 結尾。
-const SUBMIT_ENDPOINT = "";
+const SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbzeW5DwXYctCa94xrhHOcExxi1Z3R26h-SexMgwvOJ4xw6kGjqfiCU97Jh5xoJqxto/exec";
 
 // V8 分欄送出欄位名稱。
 // 若使用 README_V8.txt 提供的 Apps Script，可保持預設。
