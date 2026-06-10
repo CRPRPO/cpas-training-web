@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CPAS虛擬個案晤談蒐證模擬器 V6</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div>
+    <h1>CPAS虛擬個案晤談蒐證模擬器 V6</h1>
+    <p>第一階段不顯示CPAS，先練習蒐集背景、現況與行為證據；完成後再揭示CPAS，回頭檢查資料是否能支持報告判斷。</p>
+  </div>
+  <div class="status">
+    <div class="timer" id="timer">15:00</div>
+    <div>已問 <strong id="askedCount">0</strong> / <strong id="maxQ">10</strong> 題</div>
+  </div>
+</header>
+
+<main>
+  <section class="panel intro" id="introPanel">
+    <h2>個案基本資料</h2>
+    <div class="case-card">
+      <p><strong>姓名：</strong>林子皓</p>
+      <p><strong>性別／年齡：</strong>男性，29歲</p>
+      <p><strong>婚姻／居住：</strong>未婚，居住於新北市板橋，與母親同住。</p>
+      <p><strong>學歷／科系：</strong>私立大學資訊傳播相關科系畢業，2019年6月畢業。高中時成績普通偏低，主要不是理解力不足，而是對固定、重複、缺乏意義感的課業較缺乏耐性。</p>
+      <p><strong>知識與技能基礎：</strong>大學時期對影像、音樂、遊戲、網路文化、動漫與美感風格有興趣，曾參與社團影片剪輯，也會自行研究簡單修圖、短影音剪輯、字幕處理與字體排版；但多停留在個人喜好與零散嘗試，尚未累積完整作品集或專業作品頁面。</p>
+      <p><strong>畢業後摸索期：</strong>2019年至2022年間，曾短暫準備轉職、考慮進修，並從事餐飲內場、物流臨時工、活動後勤支援、簡單剪輯接案與圖片處理等短期或零散工作，收入與履歷累積皆不穩定。</p>
+      <p><strong>主要正式工作經歷：</strong>2023年至2025年間，曾任電商倉儲理貨員約3個月、影像剪輯助理約5個月、手機配件門市人員約1個月，每段工作維持時間皆不長。</p>
+      <p><strong>求職狀態：</strong>目前待業約8個月，主要由過去存款與母親部分支持生活，與母親在求職議題上的衝突增加。</p>
+      <p><strong>來站原因：</strong>母親催促，加上存款逐漸減少，因此前來尋求工作媒合。</p>
+      <p><strong>主要求職期待：</strong>希望工作不要一直面對人、不需要業績、不用經常加班、主管不要一直盯，最好可以自己安靜完成事情。</p>
+    </div>
+    <div class="rules">
+      <h3>第一階段任務：盲蒐證</h3>
+      <ol>
+        <li>15分鐘內最多詢問10題。</li>
+        <li>先不要看CPAS分數，專心蒐集背景、現況、經驗、限制與期待。</li>
+        <li>每問完一題，請判斷這段資料要放入哪個報告素材區。</li>
+        <li>完成後按「揭示CPAS」，再回頭對照分數與證據。</li>
+      </ol>
+    </div>
+    <button class="primary" id="startBtn">開始晤談</button>
+  </section>
+
+  <section class="layout hidden" id="appPanel">
+    <aside class="left">
+      <button class="case-inline-btn" id="openCaseBtnSide">查看個案背景</button>
+      <button class="job-inline-btn" id="openJobBtnSide">查看適性工作職務建議</button>
+      <h2>選擇問題</h2>
+      <div class="filters">
+        <button class="chip active" data-filter="all">全部</button>
+      </div>
+      <div id="questionList" class="question-list"></div>
+    </aside>
+
+    <section class="center">
+      <div id="qaBox" class="qa-box empty">
+        <h2>請從左側選擇要問的問題</h2>
+        <p>第一階段只呈現個案回答，不顯示CPAS指標。</p>
+      </div>
+
+      <div id="classifyBox" class="classify hidden">
+        <h3>這段資料要放到哪裡？</h3>
+        <div class="category-grid" id="categoryGrid"></div>
+        <label class="note-label">小組觀察筆記</label>
+        <textarea id="noteText" placeholder="例如：個案有求職意識，但實際投遞少；需要再確認阻礙原因。"></textarea>
+        <div class="actions">
+          <button class="secondary" id="skipBtn">不保留</button>
+          <button class="primary" id="saveEvidenceBtn">加入素材籃</button>
+        </div>
+      </div>
+
+      <div id="revealPanel" class="reveal hidden">
+        <h2>第二階段：CPAS揭示與對照</h2>
+        <p>請回頭檢查：剛剛保留的資料，能不能支持CPAS判讀？哪些資料只是雜訊？</p>
+        <div class="cpas-profile">
+          <h3>本個案CPAS重點</h3>
+          <p><strong>12項人格特質：</strong>行動性2、持續性2、指導性2、挑戰性3、共感性1、情緒安定性1、獨立自主性7、革新性2、思考性4、柔軟性2、感受性8、慎重性5。</p>
+          <p><strong>五大適性工作：</strong>定型工作2、對人工作1、營業工作0、非定型工作0、具創造性工作3。</p>
+          <p><strong>領導潛能：</strong>0。</p>
+          <div class="tabs">
+            <button class="tab active" data-tab="short">報告簡短版</button>
+            <button class="tab" data-tab="profile">個案Profile版</button>
+          </div>
+          <div id="cpasTextBox"></div>
+        </div>
+        <div id="cpasCompare"></div>
+        <button class="primary" id="goReportBtn">進入報告骨架</button>
+      </div>
+
+      <div id="reportPanel" class="report hidden">
+        <h2>第三階段：報告骨架</h2>
+        <p>請將蒐集到的資料轉成報告草稿。重點不是寫很長，而是要能看出證據鏈。</p>
+        <label class="student-name">小組／姓名<input id="studentName" type="text" placeholder="例如：第3組／王小明"></label>
+        <div class="report-grid">
+          <label>1. 個案背景<textarea id="r1"></textarea></label>
+          <label>2. 現況說明<textarea id="r2"></textarea></label>
+          <label>3. 收斂後職涯問題<textarea id="r3" placeholder="至少寫1個可被具體回應的問題。"></textarea></label>
+          <label>4. CPAS人格特質重點<textarea id="r4" placeholder="請寫分數＋晤談證據＋工作行為影響。"></textarea></label>
+          <label>5. 五大適性工作判斷<textarea id="r5"></textarea></label>
+          <label>6. 領導潛能<textarea id="r6"></textarea></label>
+          <label>7. 顧問建議<textarea id="r7" placeholder="每個建議都要回應職涯問題，並對應晤談證據與CPAS分數。"></textarea></label>
+        </div>
+        <div class="submit-box">
+          <h3>把報告傳給老師</h3>
+          <p>V2預設使用Email寄送。若要集中收進Google Sheet，可到 <code>config.js</code> 設定Google Form或Apps Script接收網址。</p>
+          <div class="actions">
+            <button class="secondary" id="copyReportBtn">複製報告文字</button>
+            <button class="secondary" id="downloadReportBtn">下載報告TXT</button>
+            <button class="primary" id="sendEmailBtn">用Email寄給老師</button>
+            <button class="primary hidden" id="submitOnlineBtn">線上送出給老師</button>
+          </div>
+          <p id="submitStatus" class="submit-status"></p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="right">
+      <h2>我的報告素材籃</h2>
+      <div id="basketSummary" class="basket-summary"></div>
+      <div id="basket" class="basket"></div>
+      <div class="stage-actions">
+        <button class="danger" id="resetBtn">重新開始</button>
+        <button class="primary" id="revealBtn">揭示CPAS</button>
+      </div>
+    </aside>
+  </section>
+</main>
+
+
+<button class="floating-case-btn hidden" id="openCaseBtn">查看個案背景</button>
+<button class="floating-job-btn hidden" id="openJobBtn">查看職務建議</button>
+
+<div class="modal hidden" id="caseModal" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="caseBackdrop"></div>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2>個案背景資料</h2>
+      <button class="close-btn" id="closeCaseBtn">關閉</button>
+    </div>
+    <div class="modal-body">
+      <div class="case-card case-modal-content">
+        <p><strong>姓名：</strong>林子皓</p>
+      <p><strong>性別／年齡：</strong>男性，29歲</p>
+      <p><strong>婚姻／居住：</strong>未婚，居住於新北市板橋，與母親同住。</p>
+      <p><strong>學歷／科系：</strong>私立大學資訊傳播相關科系畢業，2019年6月畢業。高中時成績普通偏低，主要不是理解力不足，而是對固定、重複、缺乏意義感的課業較缺乏耐性。</p>
+      <p><strong>知識與技能基礎：</strong>大學時期對影像、音樂、遊戲、網路文化、動漫與美感風格有興趣，曾參與社團影片剪輯，也會自行研究簡單修圖、短影音剪輯、字幕處理與字體排版；但多停留在個人喜好與零散嘗試，尚未累積完整作品集或專業作品頁面。</p>
+      <p><strong>畢業後摸索期：</strong>2019年至2022年間，曾短暫準備轉職、考慮進修，並從事餐飲內場、物流臨時工、活動後勤支援、簡單剪輯接案與圖片處理等短期或零散工作，收入與履歷累積皆不穩定。</p>
+      <p><strong>主要正式工作經歷：</strong>2023年至2025年間，曾任電商倉儲理貨員約3個月、影像剪輯助理約5個月、手機配件門市人員約1個月，每段工作維持時間皆不長。</p>
+      <p><strong>求職狀態：</strong>目前待業約8個月，主要由過去存款與母親部分支持生活，與母親在求職議題上的衝突增加。</p>
+      <p><strong>來站原因：</strong>母親催促，加上存款逐漸減少，因此前來尋求工作媒合。</p>
+      <p><strong>主要求職期待：</strong>希望工作不要一直面對人、不需要業績、不用經常加班、主管不要一直盯，最好可以自己安靜完成事情。</p>
+      </div>
+      <div class="case-card">
+        <h3>背景資料閱讀提醒</h3>
+        <p><strong>請先判斷：</strong>這些背景資料可以幫你理解個案的知識、技能、能力基礎與可轉換職務方向。</p>
+        <p><strong>不要急著建議：</strong>背景資料只是起點，後面仍要透過晤談蒐證確認求職動機、工作限制、行為模式與CPAS對應線索。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal hidden" id="jobModal" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="jobBackdrop"></div>
+  <div class="modal-card job-modal-card">
+    <div class="modal-head">
+      <h2>五大適性工作 × 建議職務</h2>
+      <button class="close-btn" id="closeJobBtn">關閉</button>
+    </div>
+    <div class="modal-body">
+      
+<div class="job-suggest-wrap">
+  <p class="lead"><strong>使用提醒：</strong>這些職務不是直接媒合答案，而是依據五大適性工作與領導潛能，提供就服員判斷「哪些工作內容比例比較可能降低排斥感」的參考。</p>
+
+  <section class="job-section">
+    <h3>一、定型工作 2</h3>
+    <h4>分數意義</h4>
+    <p>個案對長期 SOP、固定流程、重複性高、變化少的工作接受度較低。若整天都做資料輸入、作業線、倉儲理貨、表單核對，容易感到無聊、煩躁、失去意義感。</p>
+    <p>但他仍可接受「短段、明確、有完成點、可獨立作業」的標準化任務。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>電商商品上架助理：</strong>任務明確，不需大量面對顧客，可結合商品圖片、標題、規格整理。<br><span>注意：不宜是整天大量複製貼上，最好有圖片處理或內容整理元素。</span></li>
+      <li><strong>商品資料維護人員：</strong>比純資料輸入多一點判斷，例如確認商品名稱、分類、規格是否一致。<br><span>注意：需要建立固定檢查節奏，避免因重複感太高而中斷。</span></li>
+      <li><strong>圖片檔案整理／素材歸檔助理：</strong>符合他對影像、美感、分類的興趣，也能獨立完成。<br><span>注意：工作成果要具體可見，例如整理完成幾個素材庫。</span></li>
+      <li><strong>短影音字幕處理助理：</strong>有固定流程，但也接觸影像、聲音、節奏，不是純行政。<br><span>注意：不宜一開始承擔完整剪輯，只做字幕、時間軸、格式整理較適合。</span></li>
+      <li><strong>文件掃描與數位化整理人員：</strong>任務明確、互動少、責任範圍清楚。<br><span>注意：若工作過度單調，建議短期或兼職型態較佳。</span></li>
+      <li><strong>資料標註員：</strong>規則明確、可獨立作業、不需人際互動。<br><span>注意：長時間重複容易疲乏，較適合階段性任務。</span></li>
+      <li><strong>庫存資料核對助理：</strong>比倉儲理貨少一些體力與現場壓力，可做後台核對。<br><span>注意：不宜再回到高節奏、高錯誤壓力的倉儲現場。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section">
+    <h3>二、對人工作 1</h3>
+    <h4>分數意義</h4>
+    <p>個案不偏好大量陌生人互動、第一線服務、維持笑容、即時安撫顧客或處理人際情緒。門市經驗已顯示，他對主動招呼、介紹產品、面對客人詢問與店長要求服務熱度感到排斥。</p>
+    <p>但低分不代表完全不能與人互動，而是適合低頻率、低情緒、低即時壓力、以文字或內部溝通為主的人際任務。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>電商文字客服助理：</strong>比電話或門市壓力低，可以用文字與固定格式回覆。<br><span>注意：不適合處理大量客訴，較適合初步分類與制式回覆。</span></li>
+      <li><strong>後台客戶資料整理人員：</strong>與客戶有關，但不直接面對客戶情緒。<br><span>注意：可協助整理會員資料、訂單紀錄、客服紀錄。</span></li>
+      <li><strong>內部行政支援助理：</strong>互動對象主要是熟悉同事，不需大量陌生接觸。<br><span>注意：職務中不宜包含總機、櫃檯接待或大量電話。</span></li>
+      <li><strong>社群留言初步分類助理：</strong>接觸人際訊息，但不需即時面對人。<br><span>注意：只適合分類、標記、轉交，不適合主責公關回應。</span></li>
+      <li><strong>非即時客服後勤助理：</strong>可處理FAQ、退換貨資料、問題分類。<br><span>注意：避免即時線上客服或電話客服。</span></li>
+      <li><strong>內部技術支援資料助理：</strong>協助整理常見問題、文件、操作說明，不直接服務大量使用者。<br><span>注意：適合做後台資料，不宜做第一線Helpdesk。</span></li>
+      <li><strong>課程或活動後勤助理：</strong>有服務對象，但主要處理物資、檔案、簽到表、素材。<br><span>注意：不宜安排他擔任接待、主持或現場引導主責。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section">
+    <h3>三、營業工作 0</h3>
+    <h4>分數意義</h4>
+    <p>個案非常排斥推銷、業績、陌生開發、說服成交、客戶追蹤與成果競爭。門市工作經驗顯示，他不喜歡把人際互動轉成銷售壓力，也不喜歡主動推薦商品。</p>
+    <p>但營業工作低分者仍可參與「支援營業」的後台任務，也就是不負責成交，但協助商品、資料、素材、規格與說明更清楚。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>業務助理內勤：</strong>可協助資料建檔、報價單整理、客戶資料維護，不直接開發客戶。<br><span>注意：需確認沒有業績責任，也不需頻繁打電話追客戶。</span></li>
+      <li><strong>商品規格表整理人員：</strong>把商品資訊整理清楚，間接支援銷售。<br><span>注意：適合他用整理與細節感協助銷售端。</span></li>
+      <li><strong>電商商品頁維護助理：</strong>不用推銷，但能透過商品圖、規格、文字讓產品更清楚。<br><span>注意：可結合他對內容呈現與影像的興趣。</span></li>
+      <li><strong>FAQ整理人員：</strong>整理客戶常問問題，支援客服與業務，不直接面對客戶。<br><span>注意：適合低共感但可依資料整理的人。</span></li>
+      <li><strong>簡報素材整理助理：</strong>支援業務提案，但不負責上台說服或成交。<br><span>注意：工作內容以圖片、案例、規格、圖表整理為主。</span></li>
+      <li><strong>客戶資料建檔助理：</strong>與營業流程相關，但屬於後台資料支援。<br><span>注意：適合明確交辦，不宜要求他主動追蹤客戶。</span></li>
+      <li><strong>行銷素材支援助理：</strong>整理商品賣點、圖片、案例、文案初稿，支援銷售活動。<br><span>注意：不宜主責企劃或銷售轉換率。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section">
+    <h3>四、非定型工作 0</h3>
+    <h4>分數意義</h4>
+    <p>個案不偏好方向模糊、變動大、需要自行分析問題、提出企劃、推動方案的工作。他不是喜歡標準化工作，也不是喜歡高度模糊工作，而是目前對兩端都有排斥：太重複會無聊，太模糊會焦慮。</p>
+    <p>但他可以在「已經有框架、有人決定方向、自己負責其中一小段」的非定型工作周邊任務中獲得成就感。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>企劃助理中的資料蒐集人員：</strong>不用從零規劃，只負責蒐集案例、圖片、參考資料。<br><span>注意：需要明確題目與範圍。</span></li>
+      <li><strong>專案行政助理：</strong>協助會議紀錄、檔案整理、進度表更新，不主責決策。<br><span>注意：不宜安排跨部門協調主責。</span></li>
+      <li><strong>活動行政支援：</strong>協助物資、名單、流程文件、素材整理。<br><span>注意：不宜擔任現場總控或應變窗口。</span></li>
+      <li><strong>案例資料整理助理：</strong>把參考案例分類、摘要、彙整，支援企劃人員。<br><span>注意：比創意發想更適合他目前狀態。</span></li>
+      <li><strong>流程紀錄人員：</strong>協助把既有流程記錄成文件、SOP或圖表。<br><span>注意：不是要他設計流程，而是整理流程。</span></li>
+      <li><strong>內容編輯助理：</strong>在既有主題與架構下補齊文字、圖片、標題。<br><span>注意：不宜讓他負責整體內容策略。</span></li>
+      <li><strong>課程教材整理助理：</strong>依照講師或企劃給的架構整理素材、簡報、講義。<br><span>注意：適合支援，不適合獨立設計完整課程。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section">
+    <h3>五、具創造性工作 3</h3>
+    <h4>分數意義</h4>
+    <p>個案對影像、美感、風格、音樂節奏、素材呈現有興趣，但分數不高，表示不宜直接承擔主創、品牌企劃、創意提案、市場包裝或客戶導向創意工作。</p>
+    <p>比較適合的是「低壓、明確、有範本、可局部發揮」的創意支援任務。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>影片粗剪助理：</strong>符合他過去剪輯經驗與影像興趣。<br><span>注意：不宜主責完整影片創意與客戶溝通。</span></li>
+      <li><strong>短影音字幕助理：</strong>任務明確，有影像節奏感，也不需大量對人。<br><span>注意：適合從固定格式、短片段開始。</span></li>
+      <li><strong>社群圖卡套版助理：</strong>有美感與版面整理元素，但有範本可依循。<br><span>注意：不宜從零做品牌視覺主設計。</span></li>
+      <li><strong>商品圖片處理助理：</strong>結合電商、圖片、視覺整理與低互動。<br><span>注意：適合去背、裁切、尺寸調整、簡單修圖。</span></li>
+      <li><strong>素材庫管理助理：</strong>將圖片、影片、音樂、字體等素材整理成可用資源。<br><span>注意：可讓他從整理中獲得秩序感與完成感。</span></li>
+      <li><strong>內容上架助理：</strong>把圖文內容上架到網站、電商或社群排程系統。<br><span>注意：需有明確規格，避免高度即時壓力。</span></li>
+      <li><strong>基礎排版助理：</strong>可運用美感，但任務範圍不大。<br><span>注意：適合依照範本排版，不宜主責設計風格。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section">
+    <h3>六、領導潛能 0</h3>
+    <h4>分數意義</h4>
+    <p>這裡不是從管理別人的角度看，而是從個案目前對自己生活、求職節奏、責任承擔、行動穩定度的掌控來看。個案目前較容易被情緒、環境與過去經驗影響，知道自己不喜歡什麼，但較難穩定推動自己往前。</p>
+    <p>因此，現階段不適合承擔帶人、整合團隊、主導專案或高責任協調角色。較適合從個人可完成、責任範圍小、結果清楚的工作開始。</p>
+    <h4>適合的工作建議</h4>
+    <ol>
+      <li><strong>個人作業型資料助理：</strong>責任範圍清楚，不需帶人或協調。<br><span>注意：需設定每日小目標。</span></li>
+      <li><strong>短期素材整理人員：</strong>任務有完成點，有助建立掌控感。<br><span>注意：適合作為重返職場過渡。</span></li>
+      <li><strong>明確交辦型行政支援：</strong>有人給方向，個案負責完成小範圍任務。<br><span>注意：不宜兼任總務、接待、協調窗口。</span></li>
+      <li><strong>電商內容助理：</strong>個人作業比例高，成果具體可見。<br><span>注意：避免業績或即時客服責任。</span></li>
+      <li><strong>檔案整理／數位化助理：</strong>任務明確、壓力較低、完成後有可見成果。<br><span>注意：可短期建立工作節奏。</span></li>
+      <li><strong>短期專案支援人員：</strong>只負責其中一段，不需主導整案。<br><span>注意：任務必須切得很清楚。</span></li>
+      <li><strong>作品集整理助理型任務：</strong>可先從整理自己的作品開始，建立自我掌控感，再進入工作。<br><span>注意：這也可作為求職前的準備任務。</span></li>
+    </ol>
+  </section>
+
+  <section class="job-section highlight">
+    <h3>七、整合五大適性工作後的高層次建議</h3>
+    <p>這組分數的核心樣態是：他對典型工作型態的投入感普遍偏低，尤其不適合高業績、高人際、高模糊、高重複、高責任整合的工作。</p>
+    <p>但他不是完全沒有可行方向，而是需要避開典型核心壓力，從「支援型、後台型、低互動、低業績、任務明確、個人作業、帶少量內容或美感元素」的工作開始。</p>
+    <h4>較適合的工作類型</h4>
+    <ol>
+      <li><strong>電商後台內容支援類：</strong>商品上架、商品頁維護、商品圖片整理、規格表整理、內容上架。</li>
+      <li><strong>影像與素材支援類：</strong>字幕處理、影片粗剪、素材庫管理、圖片分類、基礎修圖。</li>
+      <li><strong>行銷或業務後勤支援類：</strong>簡報素材整理、FAQ整理、案例蒐集、商品賣點資料整理。</li>
+      <li><strong>企劃或專案資料支援類：</strong>資料蒐集、活動行政、會議紀錄、流程文件整理、參考案例整理。</li>
+      <li><strong>短期明確任務型工作：</strong>短期上架、短期資料整理、短期素材整理、短期字幕處理、短期檔案數位化。</li>
+    </ol>
+  </section>
+
+  <section class="job-section highlight">
+    <h3>八、最建議的職涯切入定位</h3>
+    <p><strong>最適合定位：</strong>電商內容與素材整理支援人員。</p>
+    <p>這個定位可以整合他的資訊傳播背景、影像剪輯經驗、對美感與素材有感、不喜大量面對人、不適合業績壓力、不適合高度模糊企劃、不適合長期純重複作業，以及需要任務明確、可獨立完成、有具體成果等特點。</p>
+    <h4>更精準的求職關鍵字</h4>
+    <p>電商上架助理、商品圖片處理助理、短影音字幕助理、內容上架助理、社群圖卡套版助理、素材整理助理、行銷素材助理、商品資料維護人員、影片後製助理、內容維護助理。</p>
+  </section>
+
+  <section class="job-section highlight">
+    <h3>九、給就服員的媒合提醒</h3>
+    <p>這位個案媒合時不要只看職稱，要看工作內容比例。</p>
+    <h4>比較理想的工作內容比例</h4>
+    <ul>
+      <li>固定明確任務：40%</li>
+      <li>素材／圖片／內容整理：30%</li>
+      <li>低頻率內部溝通：15%</li>
+      <li>少量創意調整：10%</li>
+      <li>行政庶務：5%</li>
+    </ul>
+    <h4>應避免的工作內容比例</h4>
+    <ul>
+      <li>顧客服務超過30%</li>
+      <li>業績銷售超過10%</li>
+      <li>高度重複作業超過60%</li>
+      <li>企劃主責或專案推動超過30%</li>
+      <li>跨部門協調超過30%</li>
+      <li>現場應變與客訴處理比例過高</li>
+    </ul>
+    <p><strong>一句話總結：</strong>他比較適合在後台整理內容、素材與商品資訊，不適合站到前台服務、銷售、協調或主導。</p>
+  </section>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>教學用途原型 V6｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
+</footer>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="cpas_profile.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
