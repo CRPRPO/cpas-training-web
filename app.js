@@ -39,6 +39,11 @@ function bindEvents(){
     if(confirm("確定要重新開始？目前紀錄會清除。")) location.reload();
   };
   $("submitOnlineBtn").onclick = submitOnline;
+  if($("copyAllBtn")) $("copyAllBtn").onclick = copyAllText;
+  if($("downloadPdfBtn")) $("downloadPdfBtn").onclick = downloadPDF;
+  if($("clearDraftBtn")) $("clearDraftBtn").onclick = clearDraft;
+  bindHelpModal();
+  bindDraftAutosave();
   document.querySelectorAll(".tab").forEach(btn=>{
     btn.onclick = () => {
       state.cpasTab = btn.dataset.tab;
@@ -51,10 +56,11 @@ function bindEvents(){
 
 function start(){
   state.started = true;
-  $("openCaseBtn").classList.remove("hidden");
+  if($("openCaseBtn")) $("openCaseBtn").classList.remove("hidden");
   if($("openJobBtn")) $("openJobBtn").classList.remove("hidden");
   $("introPanel").classList.add("hidden");
   $("appPanel").classList.remove("hidden");
+  scrollTopNow();
   startTimer();
 }
 
@@ -167,6 +173,15 @@ function saveEvidence(){
   }else{
     state.evidence.push(item);
   }
+
+  const line = `- ${item.note}（${item.id}：${item.a}）`;
+  item.cats.forEach(cat=>{
+    if(["個案背景"].includes(cat)) appendToTextarea("r1", line);
+    if(["現況說明","過去工作經驗","求職行為","求職動機","求職意願","求職態度","求職期待","不可接受條件","可妥協條件","可用能力","限制條件","家庭因素","經濟壓力","工作價值觀","工作成就感","穩定就業風險","行動準備度","心理狀態","情緒態度","學習方式","成功經驗","離職模式","來站期待"].includes(cat)) appendToTextarea("r2", line);
+    if(["職涯問題線索"].includes(cat)) appendToTextarea("r3", line);
+    if(["顧問建議素材"].includes(cat)) appendToTextarea("r7", line);
+  });
+
   updateBasket();
   $("classifyBox").classList.add("hidden");
   $("qaBox").innerHTML = `<h2>已加入素材籃</h2><p>請繼續選擇下一個問題，或在題數足夠後揭示CPAS。</p>`;
@@ -224,6 +239,7 @@ function revealCPAS(){
   $("qaBox").classList.add("hidden");
   $("revealPanel").classList.remove("hidden");
   $("reportPanel").classList.add("hidden");
+  scrollTopNow();
   renderCPASText();
   buildCompare();
   updateBasket();
@@ -272,18 +288,18 @@ function buildCompare(){
 function showReport(){
   $("revealPanel").classList.add("hidden");
   $("reportPanel").classList.remove("hidden");
+  scrollTopNow();
   autoFillReport();
+  loadDraft();
+  bindDraftAutosave();
 }
 
 function autoFillReport(){
-  const byCat = cat => state.evidence.filter(e=>e.cats.includes(cat)).map(e=>`- ${e.note}`).join("\n");
-  $("r1").value = byCat("個案背景");
-  $("r2").value = [byCat("現況說明"), byCat("求職行為"), byCat("過去工作經驗")].filter(Boolean).join("\n");
-  $("r3").value = byCat("職涯問題線索");
-  $("r4").value = Object.entries(CPAS_PROFILE.traitShort).map(([k,v])=>`${k}：${v}`).join("\n");
-  $("r5").value = Object.entries(CPAS_PROFILE.aptitudeShort).filter(([k,v])=>!k.includes("領導")).map(([k,v])=>`${k}：${v}`).join("\n");
-  $("r6").value = CPAS_PROFILE.aptitudeShort["領導潛能0"];
-  $("r7").value = byCat("顧問建議素材");
+  loadDraft();
+  if($("r4") && !$("r4").value.trim()) $("r4").value = Object.entries(CPAS_PROFILE.traitShort).map(([k,v])=>`${k}：${v}`).join("\n");
+  if($("r5") && !$("r5").value.trim()) $("r5").value = Object.entries(CPAS_PROFILE.aptitudeShort).filter(([k,v])=>!k.includes("領導")).map(([k,v])=>`${k}：${v}`).join("\n");
+  if($("r6") && !$("r6").value.trim()) $("r6").value = CPAS_PROFILE.aptitudeShort["領導潛能0"] || CPAS_PROFILE.aptitudeShort["領導潛能 0"] || "";
+  saveDraft();
 }
 
 
@@ -302,7 +318,7 @@ function selectedEvidenceText(){
 function reportText(){
   const name = $("studentName") ? ($("studentName").value.trim() || "未填寫") : "未填寫";
   return [
-    "CPAS職涯輔導報告骨架 V2",
+    "CPAS職涯輔導報告骨架 V9",
     `小組／姓名：${name}`,
     `送出時間：${new Date().toLocaleString("zh-TW")}`,
     "",
@@ -395,12 +411,14 @@ function bindCaseModal(){
   const close = () => $("caseModal").classList.add("hidden");
   if($("openCaseBtn")) $("openCaseBtn").onclick = open;
   if($("openCaseBtnSide")) $("openCaseBtnSide").onclick = open;
+  if($("openCaseBtnTop")) $("openCaseBtnTop").onclick = open;
   if($("closeCaseBtn")) $("closeCaseBtn").onclick = close;
   if($("caseBackdrop")) $("caseBackdrop").onclick = close;
   const openJob = () => $("jobModal").classList.remove("hidden");
   const closeJob = () => $("jobModal").classList.add("hidden");
   if($("openJobBtn")) $("openJobBtn").onclick = openJob;
   if($("openJobBtnSide")) $("openJobBtnSide").onclick = openJob;
+  if($("openJobBtnTop")) $("openJobBtnTop").onclick = openJob;
   if($("closeJobBtn")) $("closeJobBtn").onclick = closeJob;
   if($("jobBackdrop")) $("jobBackdrop").onclick = closeJob;
   document.addEventListener("keydown", (e)=>{
@@ -408,5 +426,28 @@ function bindCaseModal(){
     if(e.key === "Escape" && !$("jobModal").classList.contains("hidden")) closeJob();
   });
 }
+
+
+const HELP_TEXT = {
+  background:{title:"1. 個案背景",html:`<p>請整理會影響職涯判斷的基本背景資料。這一欄重點是交代個案的基本身分、學歷與目前角色，不需要寫太多延伸分析。可包含性別、年齡、學歷科系、畢業或肄業狀態、目前在職或在學狀態、公司名稱或學校名稱、目前職務或學生年級等。</p><ul><li>性別</li><li>年齡</li><li>學歷／科系</li><li>畢業或肄業狀態</li><li>公司名稱／學校名稱</li><li>職稱／學生幾年級</li><li>目前在職、待業或在學狀態</li></ul>`},
+  currentStatus:{title:"2. 現況說明",html:`<p>請整理個案目前為什麼卡住。重點不是把所有對話照抄，也不是寫流水帳，而是要說明與本次提問相關的現況脈絡。可包含過去經驗、能力基礎、興趣、價值觀、家庭或重要他人期待、目前求職狀態、實際求職行為、待業時間、經濟或家庭壓力、限制條件、可用資源、目前卡住原因，以及後續服務需要優先處理的方向。</p><ul><li>個案過去經驗與本次職涯問題有什麼關聯？</li><li>個案目前具備哪些能力基礎？</li><li>個案興趣所在是什麼？</li><li>個案價值觀想要什麼？不要什麼？</li><li>個案是否在意家庭或重要他人的期待？</li><li>個案目前的求職狀態與實際求職行為如何？</li><li>個案是否有待業時間、經濟壓力、家庭壓力或其他限制？</li><li>個案目前卡住的主要原因是什麼？</li><li>後續服務需要優先處理什麼？</li></ul>`},
+  careerProblem:{title:"3. 收斂後職涯問題",html:`<p>職涯問題不是個案原話，而是顧問追問後收斂出的核心問題。這個問題必須能被後面的顧問建議具體回應。</p><p>請不要只寫「不知道要做什麼工作」。請整理成可被回應的問題，例如：個案排斥高人際、高業績、高重複工作，但缺乏明確可投遞的低排斥職務方向，需要協助釐清職務起點。</p>`},
+  cpasTraits:{title:"4. CPAS人格特質重點",html:`<p>請挑出最能解釋個案求職困難與工作適配的 CPAS 指標。不要只寫分數高低，要寫出分數、晤談證據、工作行為影響與建議意義。</p><p>請用「分數＋晤談證據＋工作行為影響」來寫。可優先整理行動性、持續性、共感性、情緒安定性、獨立自主性、柔軟性、感受性等與本案最相關的指標。</p>`},
+  aptitude:{title:"5. 五大適性工作判斷",html:`<p>請整合定型工作、對人工作、營業工作、非定型工作、具創造性工作五個分數，說明個案適合與不適合的工作型態，並補上可嘗試職務方向。</p><p>請不要只寫高低分。請說明各分數代表的工作型態適配程度，並補上可能職務，例如電商上架助理、商品圖片處理助理、短影音字幕助理、內容上架助理、素材整理助理等。</p>`},
+  leadership:{title:"6. 領導潛能",html:`<p>這裡不只看能不能管理別人，也要看個案目前的自我管理、生活節奏、責任承擔、行動穩定度與是否適合承擔主導角色。</p><p>請說明個案目前是否適合帶人、主導、整合或承擔高責任角色。若分數低，可從「先建立自我管理、生活節奏與小任務穩定完成」來寫。</p>`},
+  recommendation:{title:"7. 顧問建議",html:`<p>顧問建議必須回應前面的職涯問題，並且要有晤談證據與 CPAS 分數支持。不要只寫一般求職建議。</p><ul><li>個案五大適性工作整合起來，搭配能力、興趣、價值觀，較適合做哪些類型的工作？有哪些分數與原因支持顧問建議？</li><li>個案特質上面，哪些對做特定工作是加分？所以顧問建議應該怎麼做會更好？有哪些分數與原因支持顧問建議？</li><li>個案特質上面，哪些對做特定工作是扣分？所以顧問建議應該怎麼做可以改善？有哪些分數與原因支持顧問建議？</li><li>個案有提到其他哪些考量是顧問可以提供改善建議的？或是提供方法處理的？是否有CPAS指標的依據？</li></ul>`}
+};
+const DRAFT_KEY="cpas_v9_report_draft";
+const REPORT_IDS=["studentName","r1","r2","r3","r4","r5","r6","r7"];
+function scrollTopNow(){setTimeout(()=>window.scrollTo({top:0,left:0,behavior:"auto"}),0)}
+function saveDraft(){const d={};REPORT_IDS.forEach(id=>{const el=$(id);if(el)d[id]=el.value});try{localStorage.setItem(DRAFT_KEY,JSON.stringify(d))}catch(e){}}
+function loadDraft(){try{const raw=localStorage.getItem(DRAFT_KEY);if(!raw)return;const d=JSON.parse(raw);REPORT_IDS.forEach(id=>{const el=$(id);if(el&&d[id]!==undefined)el.value=d[id]})}catch(e){}}
+function bindDraftAutosave(){REPORT_IDS.forEach(id=>{const el=$(id);if(el&&!el.dataset.autosaveBound){el.addEventListener("input",saveDraft);el.dataset.autosaveBound="1"}})}
+function appendToTextarea(id,text){const el=$(id);if(!el||!text)return;const current=el.value.trim();if(current.includes(text.trim()))return;el.value=current?current+"\n"+text:text;saveDraft()}
+function bindHelpModal(){document.querySelectorAll(".help-btn").forEach(btn=>{btn.onclick=()=>{const item=HELP_TEXT[btn.dataset.help];if(!item)return;$("helpTitle").textContent=item.title;$("helpContent").innerHTML=item.html;$("helpModal").classList.remove("hidden");scrollTopNow()}});const close=()=>$("helpModal").classList.add("hidden");if($("closeHelpBtn"))$("closeHelpBtn").onclick=close;if($("helpBackdrop"))$("helpBackdrop").onclick=close}
+function clearDraft(){if(confirm("確定要清除本次報告草稿？")){try{localStorage.removeItem(DRAFT_KEY)}catch(e){};REPORT_IDS.forEach(id=>{const el=$(id);if(el)el.value=""});saveDraft();}}
+function copyAllText(){navigator.clipboard.writeText(reportText()).then(()=>{$("submitStatus").textContent="已複製全部報告文字。"}).catch(()=>{$("submitStatus").textContent="複製失敗，請改用手動選取。"})}
+function downloadPDF(){const text=reportText();try{if(window.jspdf&&window.jspdf.jsPDF){const doc=new window.jspdf.jsPDF({orientation:"p",unit:"mm",format:"a4"});doc.setFont("helvetica");doc.setFontSize(12);const lines=doc.splitTextToSize(text,180);let y=15;lines.forEach(line=>{if(y>285){doc.addPage();y=15}doc.text(line,15,y);y+=7});doc.save("CPAS報告骨架_V9.pdf");$("submitStatus").textContent="已下載PDF。若中文字顯示異常，請使用瀏覽器列印另存PDF。"}else{printReport()}}catch(e){printReport()}}
+function printReport(){const w=window.open("","_blank");const safe=reportText().replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));w.document.write(`<html><head><title>CPAS報告</title><style>body{font-family:"Microsoft JhengHei",sans-serif;line-height:1.7;font-size:16px;padding:28px;white-space:pre-wrap}h1{font-size:24px}</style></head><body><h1>CPAS職涯輔導報告骨架</h1><pre>${safe}</pre></body></html>`);w.document.close();w.focus();w.print();$("submitStatus").textContent="已開啟列印視窗，請選擇另存為PDF。"}
 
 init();

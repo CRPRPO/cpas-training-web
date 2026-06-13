@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CPAS虛擬個案晤談蒐證模擬器 V8</title>
+  <title>CPAS虛擬個案晤談蒐證模擬器 V9</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
   <div>
-    <h1>CPAS虛擬個案晤談蒐證模擬器 V8</h1>
+    <h1>CPAS虛擬個案晤談蒐證模擬器 V9</h1>
     <p>第一階段不顯示CPAS，先練習蒐集背景、現況與行為證據；完成後再揭示CPAS，回頭檢查資料是否能支持報告判斷。</p>
   </div>
   <div class="status">
@@ -46,9 +46,11 @@
   </section>
 
   <section class="layout hidden" id="appPanel">
+    <div class="top-actions">
+      <button class="case-inline-btn" id="openCaseBtnTop">查看個案背景</button>
+      <button class="job-inline-btn" id="openJobBtnTop">查看適性工作職務建議</button>
+    </div>
     <aside class="left">
-      <button class="case-inline-btn" id="openCaseBtnSide">查看個案背景</button>
-      <button class="job-inline-btn" id="openJobBtnSide">查看適性工作職務建議</button>
       <h2>選擇問題</h2>
       <div class="filters">
         <button class="chip active" data-filter="all">全部</button>
@@ -96,21 +98,39 @@
         <p>請將蒐集到的資料轉成報告草稿。重點不是寫很長，而是要能看出證據鏈。</p>
         <label class="student-name">小組／姓名<input id="studentName" type="text" placeholder="例如：第3組／王小明"></label>
         <div class="report-grid">
-          <label>1. 個案背景<textarea id="r1"></textarea></label>
-          <label>2. 現況說明<textarea id="r2"></textarea></label>
-          <label>3. 收斂後職涯問題<textarea id="r3" placeholder="至少寫1個可被具體回應的問題。"></textarea></label>
-          <label>4. CPAS人格特質重點<textarea id="r4" placeholder="請寫分數＋晤談證據＋工作行為影響。"></textarea></label>
-          <label>5. 五大適性工作判斷<textarea id="r5"></textarea></label>
-          <label>6. 領導潛能<textarea id="r6"></textarea></label>
-          <label>7. 顧問建議<textarea id="r7" placeholder="每個建議都要回應職涯問題，並對應晤談證據與CPAS分數。"></textarea></label>
+          <label class="report-field">1. 個案背景 <button type="button" class="help-btn" data-help="background">?</button><textarea id="r1">1. 性別
+2. 年齡
+3. 學歷／科系
+4. 畢業或肄業狀態
+5. 公司名稱／學校名稱
+6. 職稱／學生幾年級
+7. 目前在職、待業或在學狀態</textarea></label>
+          <label class="report-field">2. 現況說明 <button type="button" class="help-btn" data-help="currentStatus">?</button><textarea id="r2">1. 個案過去經驗與本次職涯問題有什麼關聯？
+2. 個案目前具備哪些能力基礎？
+3. 個案興趣所在是什麼？
+4. 個案價值觀想要什麼？不要什麼？
+5. 個案是否在意家庭或重要他人的期待？
+6. 個案目前的求職狀態與實際求職行為如何？
+7. 個案是否有待業時間、經濟壓力、家庭壓力或其他限制？
+8. 個案目前卡住的主要原因是什麼？
+9. 後續服務需要優先處理什麼？</textarea></label>
+          <label class="report-field">3. 收斂後職涯問題 <button type="button" class="help-btn" data-help="careerProblem">?</button><textarea id="r3" placeholder="至少寫1個可被具體回應的問題。"></textarea></label>
+          <label class="report-field">4. CPAS人格特質重點 <button type="button" class="help-btn" data-help="cpasTraits">?</button><textarea id="r4" placeholder="請寫分數＋晤談證據＋工作行為影響。"></textarea></label>
+          <label class="report-field">5. 五大適性工作判斷（記得補上各分數適合的職業） <button type="button" class="help-btn" data-help="aptitude">?</button><textarea id="r5"></textarea></label>
+          <label class="report-field">6. 領導潛能 <button type="button" class="help-btn" data-help="leadership">?</button><textarea id="r6"></textarea></label>
+          <label class="report-field">7. 顧問建議 <button type="button" class="help-btn" data-help="recommendation">?</button><textarea id="r7">1. 個案五大適性工作整合起來，搭配能力、興趣、價值觀，較適合做哪些類型的工作？有哪些分數與原因支持顧問建議？
+2. 個案特質上面，哪些對做特定工作是加分？所以顧問建議應該怎麼做會更好？有哪些分數與原因支持顧問建議？
+3. 個案特質上面，哪些對做特定工作是扣分？所以顧問建議應該怎麼做可以改善？有哪些分數與原因支持顧問建議？
+4. 個案有提到其他哪些考量是顧問可以提供改善建議的？或是提供方法處理的？是否有CPAS指標的依據？</textarea></label>
         </div>
         <div class="submit-box">
-          <h3>傳送報告給老師</h3>
-          <p>請確認報告內容已完成，再按下方按鈕送出。</p>
-          <div class="field-hint">
-            <strong>送出內容：</strong>小組姓名、個案背景、現況說明、職涯問題、CPAS人格特質重點、五大適性工作判斷、領導潛能、顧問建議、晤談素材、送出時間。
-          </div>
-          <div class="actions">
+          <h3>完成報告</h3>
+          <p>請確認報告內容已完成，再選擇複製、下載PDF或傳送給老師。</p>
+          <div class="field-hint"><strong>送出內容：</strong>小組姓名、個案背景、現況說明、職涯問題、CPAS人格特質重點、五大適性工作判斷、領導潛能、顧問建議、晤談素材、送出時間。</div>
+          <div class="actions report-actions">
+            <button class="secondary" id="copyAllBtn">複製全部文字</button>
+            <button class="secondary" id="clearDraftBtn">清除本次草稿</button>
+            <button class="secondary" id="downloadPdfBtn">下載PDF</button>
             <button class="primary submit-main-btn" id="submitOnlineBtn">傳送報告給老師</button>
           </div>
           <p id="submitStatus" class="submit-status"></p>
@@ -131,8 +151,6 @@
 </main>
 
 
-<button class="floating-case-btn hidden" id="openCaseBtn">查看個案背景</button>
-<button class="floating-job-btn hidden" id="openJobBtn">查看職務建議</button>
 
 <div class="modal hidden" id="caseModal" role="dialog" aria-modal="true">
   <div class="modal-backdrop" id="caseBackdrop"></div>
@@ -328,8 +346,20 @@
   </div>
 </div>
 
+
+<div class="modal hidden" id="helpModal" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="helpBackdrop"></div>
+  <div class="modal-card help-modal-card">
+    <div class="modal-head">
+      <h2 id="helpTitle">欄位說明</h2>
+      <button class="close-btn" id="closeHelpBtn">關閉</button>
+    </div>
+    <div class="modal-body"><div id="helpContent" class="help-content"></div></div>
+  </div>
+</div>
+
 <footer>
-  <span>教學用途原型 V8｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
+  <span>教學用途原型 V9｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
 </footer>
 
 <script src="config.js"></script>
