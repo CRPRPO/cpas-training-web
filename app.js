@@ -31,6 +31,10 @@ function init(){
 function bindEvents(){
   $("startBtn").onclick = start;
   bindCaseModal();
+  if($("openCpasSummaryBtnTop")) $("openCpasSummaryBtnTop").onclick = openCpasSummary;
+  if($("closeCpasSummaryBtn")) $("closeCpasSummaryBtn").onclick = closeCpasSummary;
+  if($("cpasSummaryBackdrop")) $("cpasSummaryBackdrop").onclick = closeCpasSummary;
+  if($("goReportBtnTop")) $("goReportBtnTop").onclick = goReportTop;
   $("saveEvidenceBtn").onclick = saveEvidence;
   $("skipBtn").onclick = skipEvidence;
   $("revealBtn").onclick = revealCPAS;
@@ -318,7 +322,7 @@ function selectedEvidenceText(){
 function reportText(){
   const name = $("studentName") ? ($("studentName").value.trim() || "未填寫") : "未填寫";
   return [
-    "CPAS職涯輔導報告骨架 V9",
+    "CPAS職涯輔導報告骨架 V10",
     `小組／姓名：${name}`,
     `送出時間：${new Date().toLocaleString("zh-TW")}`,
     "",
@@ -449,5 +453,26 @@ function clearDraft(){if(confirm("確定要清除本次報告草稿？")){try{lo
 function copyAllText(){navigator.clipboard.writeText(reportText()).then(()=>{$("submitStatus").textContent="已複製全部報告文字。"}).catch(()=>{$("submitStatus").textContent="複製失敗，請改用手動選取。"})}
 function downloadPDF(){const text=reportText();try{if(window.jspdf&&window.jspdf.jsPDF){const doc=new window.jspdf.jsPDF({orientation:"p",unit:"mm",format:"a4"});doc.setFont("helvetica");doc.setFontSize(12);const lines=doc.splitTextToSize(text,180);let y=15;lines.forEach(line=>{if(y>285){doc.addPage();y=15}doc.text(line,15,y);y+=7});doc.save("CPAS報告骨架_V9.pdf");$("submitStatus").textContent="已下載PDF。若中文字顯示異常，請使用瀏覽器列印另存PDF。"}else{printReport()}}catch(e){printReport()}}
 function printReport(){const w=window.open("","_blank");const safe=reportText().replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));w.document.write(`<html><head><title>CPAS報告</title><style>body{font-family:"Microsoft JhengHei",sans-serif;line-height:1.7;font-size:16px;padding:28px;white-space:pre-wrap}h1{font-size:24px}</style></head><body><h1>CPAS職涯輔導報告骨架</h1><pre>${safe}</pre></body></html>`);w.document.close();w.focus();w.print();$("submitStatus").textContent="已開啟列印視窗，請選擇另存為PDF。"}
+
+
+function openCpasSummary(){
+  const m = $("cpasSummaryModal");
+  if(m){
+    m.classList.remove("hidden");
+    scrollTopNow && scrollTopNow();
+  }
+}
+function closeCpasSummary(){
+  const m = $("cpasSummaryModal");
+  if(m) m.classList.add("hidden");
+}
+function goReportTop(){
+  const report = $("reportPanel");
+  if(report){
+    report.classList.remove("hidden");
+    report.scrollIntoView({behavior:"auto", block:"start"});
+    setTimeout(()=>window.scrollTo({top: Math.max(report.getBoundingClientRect().top + window.pageYOffset - 20,0), behavior:"auto"}),0);
+  }
+}
 
 init();

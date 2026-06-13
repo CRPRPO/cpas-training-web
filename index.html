@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CPAS虛擬個案晤談蒐證模擬器 V9</title>
+  <title>CPAS虛擬個案晤談蒐證模擬器 V10</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
   <div>
-    <h1>CPAS虛擬個案晤談蒐證模擬器 V9</h1>
+    <h1>CPAS虛擬個案晤談蒐證模擬器 V10</h1>
     <p>第一階段不顯示CPAS，先練習蒐集背景、現況與行為證據；完成後再揭示CPAS，回頭檢查資料是否能支持報告判斷。</p>
   </div>
   <div class="status">
@@ -48,6 +48,8 @@
   <section class="layout hidden" id="appPanel">
     <div class="top-actions">
       <button class="case-inline-btn" id="openCaseBtnTop">查看個案背景</button>
+      <button class="report-top-btn" id="goReportBtnTop">填寫報告內容</button>
+      <button class="cpas-top-btn" id="openCpasSummaryBtnTop">CPAS重點</button>
       <button class="job-inline-btn" id="openJobBtnTop">查看適性工作職務建議</button>
     </div>
     <aside class="left">
@@ -79,12 +81,9 @@
         <h2>第二階段：CPAS揭示與對照</h2>
         <p>請回頭檢查：剛剛保留的資料，能不能支持CPAS判讀？哪些資料只是雜訊？</p>
         <div class="cpas-profile">
-          <h3>本個案CPAS重點</h3>
-          <p><strong>12項人格特質：</strong>行動性2、持續性2、指導性2、挑戰性3、共感性1、情緒安定性1、獨立自主性7、革新性2、思考性4、柔軟性2、感受性8、慎重性5。</p>
-          <p><strong>五大適性工作：</strong>定型工作2、對人工作1、營業工作0、非定型工作0、具創造性工作3。</p>
-          <p><strong>領導潛能：</strong>0。</p>
-          <div class="tabs">
-            <button class="tab active" data-tab="short">報告簡短版</button>
+          <h3>CPAS判讀資料</h3>
+          <p>請使用上方「CPAS重點」按鈕查看本個案分數摘要；下方可切換查看報告簡短版與個案Profile版。</p>
+          <button class="tab active" data-tab="short">報告簡短版</button>
             <button class="tab" data-tab="profile">個案Profile版</button>
           </div>
           <div id="cpasTextBox"></div>
@@ -358,8 +357,29 @@
   </div>
 </div>
 
+
+<div class="modal hidden" id="cpasSummaryModal" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="cpasSummaryBackdrop"></div>
+  <div class="modal-card cpas-summary-card">
+    <div class="modal-head">
+      <h2>本個案CPAS重點</h2>
+      <button class="close-btn" id="closeCpasSummaryBtn">關閉</button>
+    </div>
+    <div class="modal-body">
+      <div class="cpas-score-box">
+        <h3>12項人格特質</h3>
+        <p>行動性2分、持續性2分、指導性2分、挑戰性3分、共感性1分、情緒安定性1分、獨立自主性7分、革新性2分、思考性4分、柔軟性2分、感受性8分、慎重性5分。</p>
+        <h3>五大適性工作</h3>
+        <p>定型工作2分、對人工作1分、營業工作0分、非定型工作0分、具創造性工作3分。</p>
+        <h3>領導潛能</h3>
+        <p>0分。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
-  <span>教學用途原型 V9｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
+  <span>教學用途原型 V10｜可離線使用｜GitHub Pages可部署｜建議使用Chrome或Edge開啟</span>
 </footer>
 
 <script src="config.js"></script>
